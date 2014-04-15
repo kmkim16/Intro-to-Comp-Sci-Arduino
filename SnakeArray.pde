@@ -10,14 +10,29 @@
 clear and delay slate
 */
 
-int xcoord = 3; //player coordinates
-int ycoord = 4;
+//int xcoord = 3; //player coordinates
+//int ycoord = 4;
 int direction = 0;
 int speed = 300; //speed variable
-int xapple = random(8); //random apple coordinates
-int yapple = random(8);
+//int xapple = random(8); //random apple coordinates
+//int yapple = random(8);
 boolean ateApple = true;
-int applesEaten = 0;
+int marker = 4;
+//int marker = 4(snakeArray[4]);
+//int applesEaten = 0; SetAuxLight
+
+struct Point //creating a structure for array
+{
+  int x; //x coordinate for snake array
+  int y; //y coordinate for snake array
+};
+
+Point s1 = {2,4};
+Point s2 = {3,4};
+Point s3 = {4,4};
+Point s4 = {5,4};
+
+Point snakeArray[64] = {s1, s2, s3, s4}; //declare snakeArray
 
 void setup()
 {
@@ -26,10 +41,9 @@ void setup()
 
 void loop()
 { 
-  DrawPx(xapple,yapple,1);
-  DrawPx(xcoord,ycoord,4);
+  drawSnake();
   
-  CheckButtonsPress();
+CheckButtonsPress();
   if (Button_Up) //if up button is pressed, set direction to 0
     direction = 0;
      
@@ -41,50 +55,51 @@ void loop()
      
   if (Button_Left) //if left button is pressed, set direction to 270
     direction = 270;
- 
-  if (Button_A)
-    speed = 150;
-  if (Button_B)
-    speed = 300;
-     
-  if (direction == 0) //if the direction is 0 (up), increase ycoord by 1
-    ycoord = ycoord + 1; //x--; or x-=1
-       
-  if (direction == 90) //if the direction is 90 (right), increase xcoord by 1
-    xcoord = xcoord + 1;
-       
-  if (direction == 180) //if the direction is 180 (down), decrease ycoord by 1
-    ycoord = ycoord-1;
-       
-  if (direction == 270) //if direction is 270 (left), decrease xcoord by 1
-    xcoord =xcoord-1;
- 
-  if (xcoord > 7) //adjusting limits
-    xcoord = 0;
-  if (xcoord < 0)
-    xcoord = 7;
-  if (ycoord > 7)
-    ycoord = 0;
-  if (ycoord < 0)
-    ycoord  = 7;
-      
-  if (xcoord == xapple && ycoord == yapple)
-    ateApple = true;
-    applesEaten = applesEaten*2;
   
-  if (ateApple){
-    xapple = random(8); //random apple coordinates
-    yapple = random(8);
-    ateApple = false;
-  }
-    
-  if (applesEaten >)
-    SetAuxLEDs(1);
-    
+  if (snakeArray[0].y > 7) //adjusting limits
+    snakeArray[0].y = 0;
+  if (snakeArray[0].y < 0)
+    snakeArray[0].y = 7;
+  if (snakeArray[0].x > 7)
+    snakeArray[0].x = 0;
+  if (snakeArray[0].x < 0)
+    snakeArray[0].x  = 7;
+  
+  updateSnake();
+  
   DisplaySlate();
   delay(speed);
   ClearSlate();
 }
+
+void drawSnake()
+ { 
+  for (int i = 0; i < marker; i++)
+   {
+     DrawPx(snakeArray[i].x, snakeArray[i].y, Red);
+   }
+ }
+void updateSnake()
+ {
+   for (int i = marker-1; i > 0; i--)
+    {
+      snakeArray[i].x = snakeArray[i-1].x;
+      snakeArray[i].y = snakeArray[i-1].y;
+    }
+    if (direction == 0)
+      snakeArray[0].y++;
+    
+    if (direction == 90)
+      snakeArray[0].x++;
+      
+    if (direction == 180)
+      snakeArray[0].y--;
+      
+    if (direction == 270)
+      snakeArray[0].x--;
+ }
+
+//end of code
 
 /*
 boolean ateApple = true;
@@ -96,9 +111,7 @@ if (ateApple){
 }
 if (xplayer == xapple && yplayer == yapple)
   ateApple = true;
-*/
-
-/*
+  
 void loop()
   draw snake
   draw apple
@@ -109,3 +122,5 @@ void loop()
   collision detection
   move apple if neccessary (probably spelled wrong)
 */
+
+
